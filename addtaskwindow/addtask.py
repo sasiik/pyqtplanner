@@ -8,20 +8,19 @@ from sqlite3_connection import con
 
 
 class AddTaskApp(QWidget, Ui_Form):
-    def __init__(self, xcoord, ycoord):
+    def __init__(self, xcoord, ycoord, main_app):
         super().__init__()
+        self.main_app = main_app
         self.setupUi(self, xcoord, ycoord)
         self.addtaskAddButton.clicked.connect(self.addTask)
 
     def addTask(self):
-        from mainwindow.main import MainApp, ex
-
         title = self.titleLineEdit.text()
         circ_count = self.CirclesCountLineEdit.text()
         cur = con.cursor()
         cur.execute("""INSERT INTO tasks VALUES(?, ?, ?)""", (title, circ_count, 'FALSE'))
         con.commit()
-        MainApp.initTable(ex)
+        self.main_app.initTable()
 
 
 if __name__ == '__main__':
