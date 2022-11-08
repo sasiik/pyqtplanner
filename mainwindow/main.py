@@ -1,10 +1,9 @@
-from UI_Main import Ui_MainWindow
-
 import sys
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
-
 from sqlite3_connection import con
+
+from UI_Main import Ui_MainWindow
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
@@ -29,12 +28,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
             window.close()
 
     def initTable(self):
+        print("In initTable")
         cur = con.cursor()
         result = cur.execute(f"SELECT * FROM tasks").fetchall()
+        self.tasksTable.clear()
         self.tasksTable.setRowCount(len(result))
         self.tasksTable.setColumnCount(len(result[0]))
         self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
-        print(result)
         for i, elem in enumerate(result):
             for j, val in enumerate(elem):
                 self.tasksTable.setItem(i, j, QTableWidgetItem(str(val)))
@@ -44,7 +44,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def addTask(self):
         from addtaskwindow.addtask import AddTaskApp
-        self.AddTaskWidget = AddTaskApp(self.x() + 50, self.y() + 50)
+        self.AddTaskWidget = AddTaskApp(self.x() + 50, self.y() + 50, main_app=self)
         self.AddTaskWidget.show()
 
     def removeTask(self):
