@@ -18,7 +18,7 @@ class AddTaskApp(QWidget, Ui_Form):
         title = self.titleLineEdit.text()
         circ_count = self.CirclesCountLineEdit.text()
         cur = con.cursor()
-        cur.execute("""INSERT INTO tasks VALUES(?, ?, ?)""", (title, circ_count, 'FALSE'))
+        cur.execute("""INSERT INTO tasks(title, circ_count, completed) VALUES(?, ?, ?)""", (title, circ_count, 'FALSE'))
         con.commit()
         self.main_app.initTable()
 

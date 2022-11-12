@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
 from sqlite3_connection import con
 
 from UI_Main import Ui_MainWindow
@@ -10,10 +10,14 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.tasksTable.setColumnWidth(0, 235)
+        self.tasksTable.setColumnCount(4)
+        self.tasksTable.setColumnWidth(0, 225)
+        self.tasksTable.setColumnHidden(3, True)
         self.tasksTable.horizontalHeader().setStretchLastSection(True)
+        self.tasksTable.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.tasksTable.setWordWrap(True)
         self.initTable()
+        self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
         self.changeStateButton.clicked.connect(self.changeState)
         self.mainAddTaskButton.clicked.connect(self.addTask)
         self.removeButton.clicked.connect(self.removeTask)
@@ -28,27 +32,32 @@ class MainApp(QMainWindow, Ui_MainWindow):
             window.close()
 
     def initTable(self):
-        print("In initTable")
         cur = con.cursor()
         result = cur.execute(f"SELECT * FROM tasks").fetchall()
-        self.tasksTable.clear()
         self.tasksTable.setRowCount(len(result))
-        self.tasksTable.setColumnCount(len(result[0]))
-        self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
         for i, elem in enumerate(result):
             for j, val in enumerate(elem):
                 self.tasksTable.setItem(i, j, QTableWidgetItem(str(val)))
 
     def changeState(self):
         pass
-
     def addTask(self):
         from addtaskwindow.addtask import AddTaskApp
         self.AddTaskWidget = AddTaskApp(self.x() + 50, self.y() + 50, main_app=self)
         self.AddTaskWidget.show()
 
     def removeTask(self):
-        pass
+        rows = list(set([i.row() for i in self.tasksTable.selectedItems()]))
+        ids = [self.tasksTable.item(i, 3).text() for i in rows]
+        valid = QMessageBox.question(
+            self, '', "Действительно удалить выбранные элементы?",
+            QMessageBox.Yes, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            cur = con.cursor()
+            cur.execute("DELETE FROM tasks WHERE id IN (" + ", ".join(
+                '?' * len(ids)) + ")", ids)
+            con.commit()
+            self.initTable()
 
     def popupTimeScheduleWindow(self):
         from settingswindow.settings import SettingsApp
@@ -64,9 +73,9 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def clearDataFunction(self):
         pass
 
-app = QApplication(sys.argv)
-ex = MainApp()
 
 if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = MainApp()
     ex.show()
     sys.exit(app.exec())
