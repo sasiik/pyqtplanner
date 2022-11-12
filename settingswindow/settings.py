@@ -29,6 +29,7 @@ class SettingsApp(QWidget, Ui_Form):
             self.personalDataWriter(focusTimeVal, breakVal, LongBreakVal)
             self.main_app.personalDataReader()
             self.main_app.ChangePeriodFunction()
+            self.errorLabel.setText('')
             self.close()
         except Exception:
             self.errorLabel.setText('Ошибка: неверный формат ввода (введите целые числа)')

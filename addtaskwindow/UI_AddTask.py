@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form, xcoord, ycoord):
         Form.setObjectName("Form")
-        Form.setFixedSize(392, 307)
+        Form.setFixedSize(392, 320)
         Form.move(xcoord, ycoord)
         self.addtaskAppLabel = QtWidgets.QLabel(Form)
         self.addtaskAppLabel.setGeometry(QtCore.QRect(40, 10, 311, 61))
@@ -54,7 +54,12 @@ class Ui_Form(object):
         self.addtaskAddButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.addtaskAddButton.setObjectName("addtaskAddButton")
         self.verticalLayout.addWidget(self.addtaskAddButton)
-
+        self.errorLabel = QtWidgets.QLabel(Form)
+        self.errorLabel.setGeometry(QtCore.QRect(20, 280, 351, 21))
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.errorLabel.setFont(font)
+        self.errorLabel.setObjectName("label")
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -65,3 +70,4 @@ class Ui_Form(object):
         self.titleLabel.setText(_translate("Form", "Title:"))
         self.CirclesCountLabel.setText(_translate("Form", "Circles count:"))
         self.addtaskAddButton.setText(_translate("Form", "Add"))
+        self.errorLabel.setText(_translate("Form", ""))

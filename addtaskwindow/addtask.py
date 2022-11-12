@@ -15,12 +15,17 @@ class AddTaskApp(QWidget, Ui_Form):
         self.addtaskAddButton.clicked.connect(self.addTask)
 
     def addTask(self):
-        title = self.titleLineEdit.text()
-        circ_count = self.CirclesCountLineEdit.text()
-        cur = con.cursor()
-        cur.execute("""INSERT INTO tasks(title, circ_count, completed) VALUES(?, ?, ?)""", (title, circ_count, 'FALSE'))
-        con.commit()
-        self.main_app.initTable()
+        try:
+            title = self.titleLineEdit.text()
+            circ_count = int(self.CirclesCountLineEdit.text())
+            cur = con.cursor()
+            cur.execute("""INSERT INTO tasks(title, circ_count, completed) VALUES(?, ?, ?)""",
+                        (title, circ_count, 'FALSE'))
+            con.commit()
+            self.main_app.initTable()
+            self.errorLabel.setText('')
+        except Exception:
+            self.errorLabel.setText('Ошибка: неверный формат ввода')
 
 
 if __name__ == '__main__':

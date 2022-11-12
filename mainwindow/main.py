@@ -4,7 +4,7 @@ import sys
 from PyQt5.QtCore import QTimer, Qt, QUrl
 from PyQt5 import QtMultimedia
 from PyQt5.QtGui import QPalette
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView
 from sqlite3_connection import con
 
 from UI_Main import Ui_MainWindow
@@ -22,6 +22,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.tasksTable.horizontalHeader().setStretchLastSection(True)
         self.tasksTable.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.tasksTable.setWordWrap(True)
+        self.tasksTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.initTable()
         self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
 
@@ -66,7 +67,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
         content = QtMultimedia.QMediaContent(media)
         self.player = QtMultimedia.QMediaPlayer(flags=QtMultimedia.QMediaPlayer.LowLatency)
         self.player.setMedia(content)
-        self.player.play()
 
     def showTime(self):
         if self.current_period['in_sec'] == 0:
@@ -103,16 +103,17 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def removeTask(self):
         rows = list(set([i.row() for i in self.tasksTable.selectedItems()]))
-        ids = [self.tasksTable.item(i, 3).text() for i in rows]
-        valid = QMessageBox.question(
-            self, 'Yandex.Planner', "Действительно удалить выбранные элементы?",
-            QMessageBox.Yes, QMessageBox.No)
-        if valid == QMessageBox.Yes:
-            cur = con.cursor()
-            cur.execute("DELETE FROM tasks WHERE id IN (" + ", ".join(
-                '?' * len(ids)) + ")", ids)
-            con.commit()
-            self.initTable()
+        if rows:
+            ids = [self.tasksTable.item(i, 3).text() for i in rows]
+            valid = QMessageBox.question(
+                self, 'Yandex.Planner', "Действительно удалить выбранные элементы?",
+                QMessageBox.Yes, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                cur = con.cursor()
+                cur.execute("DELETE FROM tasks WHERE id IN (" + ", ".join(
+                    '?' * len(ids)) + ")", ids)
+                con.commit()
+                self.initTable()
 
     def popupTimeScheduleWindow(self):
         from settingswindow.settings import SettingsApp
