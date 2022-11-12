@@ -100,8 +100,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Yandex.Planner"))
-        self.timer.setText(_translate("MainWindow", "12:34"))
+        self.timer.setStyleSheet("QLabel { color : red; }")
         self.periodInfo.setText(_translate("MainWindow", "Focus Time"))
+        self.periodInfo.setStyleSheet("QLabel { color : red; }")
         self.changeStateButton.setText(_translate("MainWindow", "Mark selected tasks as completed/uncompleted"))
         self.mainAddTaskButton.setText(_translate("MainWindow", "Add task"))
         self.removeButton.setText(_translate("MainWindow", "Remove tasks"))

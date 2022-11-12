@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_Form(object):
     def setupUi(self, Form, xcoord, ycoord):
         Form.setObjectName("Form")
@@ -62,6 +63,12 @@ class Ui_Form(object):
         self.settingsAppLabel.setFont(font)
         self.settingsAppLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.settingsAppLabel.setObjectName("settingsAppLabel")
+        self.errorLabel = QtWidgets.QLabel(Form)
+        self.errorLabel.setGeometry(QtCore.QRect(40, 370, 471, 31))
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.errorLabel.setFont(font)
+        self.errorLabel.setObjectName("ErrorLabel")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -74,3 +81,4 @@ class Ui_Form(object):
         self.LongBreakDurationLabel.setText(_translate("Form", "Long break duration(min):"))
         self.settingsSaveButton.setText(_translate("Form", "Save"))
         self.settingsAppLabel.setText(_translate("Form", "Settings"))
+        self.errorLabel.setText(_translate("Form", ""))
