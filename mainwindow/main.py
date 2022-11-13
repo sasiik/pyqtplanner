@@ -1,9 +1,8 @@
 import os
 import sys
 
-from PyQt5.QtCore import QTimer, Qt, QUrl
+from PyQt5.QtCore import QTimer, QUrl
 from PyQt5 import QtMultimedia
-from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView
 from sqlite3_connection import con
 
@@ -41,9 +40,9 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.qttimer.timeout.connect(self.showTime)
         self.qttimer.start(1000)
 
-        self.focus_time = {'in_sec': 10, 'label': 'Focus Time', 'properties': 'QLabel { color : red; }'}
-        self.break_time = {'in_sec': 2, 'label': 'Break Time', 'properties': 'QLabel { color : green; }'}
-        self.long_break_time = {'in_sec': 6, 'label': 'Long Break Time', 'properties': 'QLabel { color : blue; }'}
+        self.focus_time = {'in_sec': 1500, 'label': 'Focus Time', 'properties': 'QLabel { color : red; }'}
+        self.break_time = {'in_sec': 300, 'label': 'Break Time', 'properties': 'QLabel { color : green; }'}
+        self.long_break_time = {'in_sec': 900, 'label': 'Long Break Time', 'properties': 'QLabel { color : blue; }'}
         self.personalDataReader()
         self.periods = [self.focus_time, self.break_time] * 3 + [self.focus_time, self.long_break_time]
         self.counter = 0
@@ -57,7 +56,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def personalDataReader(self):
         with open('config.csv', encoding="utf8") as csvfile:
             reader = list(csv.reader(csvfile, delimiter=';'))
-            print(reader)
             self.focus_time['in_sec'] = int(reader[0][0])
             self.break_time['in_sec'] = int(reader[0][1])
             self.long_break_time['in_sec'] = int(reader[0][2])
@@ -130,16 +128,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def ChangePeriodFunction(self):
         if self.sender().objectName() == "ChangeToLongBreak":
             self.counter = 7
-            self.PeriodSwap()
-            self.pause()
         elif self.sender().objectName() == 'ChangeToShortBreak':
             self.counter = 1
-            self.PeriodSwap()
-            self.pause()
         else:
             self.counter = 0
-            self.PeriodSwap()
-            self.pause()
+        self.PeriodSwap()
+        self.pause()
 
     def pause(self):
         self.qttimer.stop()

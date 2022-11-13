@@ -30,6 +30,6 @@ class AddTaskApp(QWidget, Ui_Form):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = AddTaskApp()
+    ex = AddTaskApp(0, 0, None)
     ex.show()
     sys.exit(app.exec())
