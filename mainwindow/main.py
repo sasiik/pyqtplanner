@@ -62,14 +62,14 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def load_mp3(self, filename):
         media = QUrl.fromLocalFile(filename)
-        content = QtMultimedia.QMediaContent(media)
+        self.content = QtMultimedia.QMediaContent(media)
         self.player = QtMultimedia.QMediaPlayer(flags=QtMultimedia.QMediaPlayer.LowLatency)
-        self.player.setMedia(content)
 
     def showTime(self):
         if self.current_period['in_sec'] == 0:
             self.counter += 1
             self.PeriodSwap()
+            self.player.setMedia(self.content)
             self.player.play()
         else:
             self.current_period['in_sec'] -= 1
@@ -104,7 +104,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         if rows:
             ids = [self.tasksTable.item(i, 3).text() for i in rows]
             valid = QMessageBox.question(
-                self, 'Yandex.Planner', "Действительно удалить выбранные элементы?",
+                self, 'Yandex.Planner', "Delete these elements?",
                 QMessageBox.Yes, QMessageBox.No)
             if valid == QMessageBox.Yes:
                 cur = con.cursor()
@@ -148,7 +148,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def clearDataFunction(self):
         valid = QMessageBox.question(
-            self, '', "Действительно удалить всё?",
+            self, 'Yandex.Planner', "Delete all?",
             QMessageBox.Yes, QMessageBox.No)
         if valid == QMessageBox.Yes:
             cur = con.cursor()

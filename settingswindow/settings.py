@@ -24,13 +24,15 @@ class SettingsApp(QWidget, Ui_Form):
             focusTimeVal = int(self.FocusTimeDurationLineEdit.text()) * 60
             breakVal = int(self.BreakDurationLineEdit.text()) * 60
             LongBreakVal = int(self.LongBreakDurationLineEdit.text()) * 60
+            if any(elem <= 0 for elem in [focusTimeVal, breakVal, LongBreakVal]):
+                raise Exception
             self.errorLabel.setText('')
             self.personalDataWriter(focusTimeVal, breakVal, LongBreakVal)
             self.main_app.personalDataReader()
             self.main_app.ChangePeriodFunction()
             self.close()
         except Exception:
-            self.errorLabel.setText('Ошибка: неверный формат ввода (введите целые числа)')
+            self.errorLabel.setText('Error: incorrect input')
 
 
 if __name__ == '__main__':

@@ -1,4 +1,3 @@
-import sqlite3
 import sys
 
 from PyQt5.QtWidgets import QWidget, QApplication
@@ -18,6 +17,8 @@ class AddTaskApp(QWidget, Ui_Form):
         try:
             title = self.titleLineEdit.text()
             circ_count = int(self.CirclesCountLineEdit.text())
+            if circ_count <= 0:
+                raise Exception
             cur = con.cursor()
             cur.execute("""INSERT INTO tasks(title, circ_count, completed) VALUES(?, ?, ?)""",
                         (title, circ_count, 'FALSE'))
@@ -25,7 +26,7 @@ class AddTaskApp(QWidget, Ui_Form):
             self.main_app.initTable()
             self.errorLabel.setText('')
         except Exception:
-            self.errorLabel.setText('Ошибка: неверный формат ввода')
+            self.errorLabel.setText('Error: incorrect input')
 
 
 if __name__ == '__main__':
