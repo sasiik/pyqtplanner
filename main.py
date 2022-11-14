@@ -9,7 +9,6 @@ from sqlite3_connection import con
 from UI_Main import Ui_MainWindow
 import datetime as dt
 import csv
-import pygame
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
@@ -139,7 +138,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def PeriodSwap(self):
         self.current_period = self.periods[self.counter % len(self.periods)].copy()
         self.timer.setText(str((dt.datetime.min + dt.timedelta(seconds=self.current_period['in_sec'])).time()))
-        # Setting period info and color when period changes
+        # Setting period openme and color when period changes
         self.periodInfo.setText(self.current_period['label'])
         self.timer.setStyleSheet(self.current_period['properties'])
         self.periodInfo.setStyleSheet(self.current_period['properties'])
