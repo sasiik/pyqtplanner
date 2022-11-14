@@ -9,18 +9,23 @@ from settingswindow.UI_Settings import Ui_Form
 class SettingsApp(QWidget, Ui_Form):
     def __init__(self, xcoord, ycoord, main_app):
         super().__init__()
+        # Setting main app source and position
         self.setupUi(self, xcoord, ycoord)
-        self.settingsSaveButton.clicked.connect(self.saveChanges)
         self.main_app = main_app
 
+        self.settingsSaveButton.clicked.connect(self.saveChanges)
+
+    # Fuction to write data to user config
     def personalDataWriter(self, *values_list):
         with open('config.csv', 'w', encoding="utf8") as csvfile:
             writer = csv.writer(
                 csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(values_list)
 
+    # Saving new user config data
     def saveChanges(self):
         try:
+            # Fetching and checking values
             focusTimeVal = int(self.FocusTimeDurationLineEdit.text()) * 60
             breakVal = int(self.BreakDurationLineEdit.text()) * 60
             LongBreakVal = int(self.LongBreakDurationLineEdit.text()) * 60
@@ -28,6 +33,7 @@ class SettingsApp(QWidget, Ui_Form):
                 raise Exception
             self.errorLabel.setText('')
             self.personalDataWriter(focusTimeVal, breakVal, LongBreakVal)
+            # Reading new data in main app, and changing period to Focus Time
             self.main_app.personalDataReader()
             self.main_app.ChangePeriodFunction()
             self.close()

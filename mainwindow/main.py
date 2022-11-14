@@ -15,6 +15,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        # some tasksTable changes
         self.tasksTable.setColumnCount(4)
         self.tasksTable.setColumnWidth(0, 225)
         self.tasksTable.setColumnHidden(3, True)
@@ -25,8 +26,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.initTable()
         self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
 
+        # Loading sound
         self.load_mp3(os.getcwd() + '/alarm.wav')
 
+        # Connecting buttons
         self.changeStateButton.clicked.connect(self.changeState)
         self.mainAddTaskButton.clicked.connect(self.addTask)
         self.removeButton.clicked.connect(self.removeTask)
@@ -36,23 +39,32 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.Pause_Unpause.triggered.connect(self.PauseUnpauseFunction)
         self.ClearData.triggered.connect(self.clearDataFunction)
 
+        # Connecting timer
         self.qttimer = QTimer()
         self.qttimer.timeout.connect(self.showTime)
         self.qttimer.start(1000)
 
+        # Initializing time periods data (time in sec, name of period, color properties for period)
         self.focus_time = {'in_sec': 1500, 'label': 'Focus Time', 'properties': 'QLabel { color : red; }'}
         self.break_time = {'in_sec': 300, 'label': 'Break Time', 'properties': 'QLabel { color : green; }'}
         self.long_break_time = {'in_sec': 900, 'label': 'Long Break Time', 'properties': 'QLabel { color : blue; }'}
-        self.personalDataReader()
-        self.periods = [self.focus_time, self.break_time] * 3 + [self.focus_time, self.long_break_time]
-        self.counter = 0
-        self.current_period = self.periods[0].copy()
-        self.timer.setText(str((dt.datetime.min + dt.timedelta(seconds=self.current_period['in_sec'])).time()))
 
+        # Reading config.csv file and modifying periods values accordingly
+        self.personalDataReader()
+        # Constructing Pomodoro cycle
+        self.periods = [self.focus_time, self.break_time] * 3 + [self.focus_time, self.long_break_time]
+
+        self.counter = 0  # Counter of periods. Useful when calling a certain period
+        self.current_period = self.periods[0].copy()  # Setting current period (Focus time)
+        self.timer.setText(str((dt.datetime.min + dt.timedelta(seconds=self.current_period['in_sec'])).time()))
+        # Setting time on the MainWindow timer
+
+    # Closes all windows if main is closed
     def closeEvent(self, event):
         for window in QApplication.topLevelWidgets():
             window.close()
 
+    # Config.csv file reader
     def personalDataReader(self):
         with open('config.csv', encoding="utf8") as csvfile:
             reader = list(csv.reader(csvfile, delimiter=';'))
@@ -60,11 +72,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.break_time['in_sec'] = int(reader[0][1])
             self.long_break_time['in_sec'] = int(reader[0][2])
 
+    # Loads the alarm sound
     def load_mp3(self, filename):
         media = QUrl.fromLocalFile(filename)
         self.content = QtMultimedia.QMediaContent(media)
         self.player = QtMultimedia.QMediaPlayer(flags=QtMultimedia.QMediaPlayer.LowLatency)
 
+    # Timer function
     def showTime(self):
         if self.current_period['in_sec'] == 0:
             self.counter += 1
@@ -84,6 +98,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
             for j, val in enumerate(elem):
                 self.tasksTable.setItem(i, j, QTableWidgetItem(str(val)))
 
+    # Changes FALSE value to TRUE and vice versa
     def changeState(self):
         cur = con.cursor()
         rows = list(set([i.row() for i in self.tasksTable.selectedItems()]))
@@ -113,18 +128,22 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 con.commit()
                 self.initTable()
 
+    # Calls SettingsApp
     def popupTimeScheduleWindow(self):
         from settingswindow.settings import SettingsApp
         self.TimeScheduleWidget = SettingsApp(self.x() + 20, self.y() + 20, main_app=self)
         self.TimeScheduleWidget.show()
 
+    # Time periods swapping main logic is here
     def PeriodSwap(self):
         self.current_period = self.periods[self.counter % len(self.periods)].copy()
         self.timer.setText(str((dt.datetime.min + dt.timedelta(seconds=self.current_period['in_sec'])).time()))
+        # Setting period info and color when period changes
         self.periodInfo.setText(self.current_period['label'])
         self.timer.setStyleSheet(self.current_period['properties'])
         self.periodInfo.setStyleSheet(self.current_period['properties'])
 
+    # Changing periods function
     def ChangePeriodFunction(self):
         if self.sender().objectName() == "ChangeToLongBreak":
             self.counter = 7
@@ -132,9 +151,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.counter = 1
         else:
             self.counter = 0
+        # Changing counter value helps to swap between periods
         self.PeriodSwap()
         self.pause()
 
+    # modified version of self.qttimer.pause()
     def pause(self):
         self.qttimer.stop()
         self.periodInfo.setText(self.current_period['label'] + ' (Paused)')
