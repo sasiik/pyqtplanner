@@ -9,6 +9,7 @@ from sqlite3_connection import con
 from UI_Main import Ui_MainWindow
 import datetime as dt
 import csv
+import pygame
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
