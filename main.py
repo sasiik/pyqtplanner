@@ -1,10 +1,9 @@
 import os
 import sys
 
-from PyQt5.QtCore import QTimer, QUrl, QPoint
+from PyQt5.QtCore import QTimer, QUrl
 from PyQt5 import QtMultimedia
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView, \
-    QAction
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView
 from sqlite3_connection import con
 
 from UI_Main import Ui_MainWindow

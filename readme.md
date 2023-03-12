@@ -16,6 +16,6 @@
 
 --sqlite3_connection.py - DB connection
 
---compiledapp folder contains YandexPlanner.exe version
+--App folder contains YandexPlanner.exe version (path: App/dist/main/YandexPlanner)
 
 -Other files are just service files. You can read more about code in commentaries inside the code files-
