@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QActionGroup
 
 
 class Ui_MainWindow(object):
@@ -78,17 +79,25 @@ class Ui_MainWindow(object):
         self.setTimeSchedule.setObjectName("setTimeSchedule")
         self.ChangeToFocusTime = QtWidgets.QAction(MainWindow)
         self.ChangeToFocusTime.setObjectName("ChangeToFocusTime")
+        self.ChangeToFocusTime.setCheckable(True)
         self.ChangeToShortBreak = QtWidgets.QAction(MainWindow)
         self.ChangeToShortBreak.setObjectName("ChangeToShortBreak")
+        self.ChangeToShortBreak.setCheckable(True)
         self.ChangeToLongBreak = QtWidgets.QAction(MainWindow)
         self.ChangeToLongBreak.setObjectName("ChangeToLongBreak")
+        self.ChangeToLongBreak.setCheckable(True)
         self.ClearData = QtWidgets.QAction(MainWindow)
         self.ClearData.setObjectName("ClearData")
+        self.ChangePeriodGroup = QActionGroup(self.ChangePeriod)
         self.menuSettings.addAction(self.setTimeSchedule)
         self.menuSettings.addAction(self.ClearData)
         self.ChangePeriod.addAction(self.ChangeToFocusTime)
         self.ChangePeriod.addAction(self.ChangeToShortBreak)
         self.ChangePeriod.addAction(self.ChangeToLongBreak)
+        self.ChangePeriodGroup.addAction(self.ChangeToFocusTime)
+        self.ChangePeriodGroup.addAction(self.ChangeToShortBreak)
+        self.ChangePeriodGroup.addAction(self.ChangeToLongBreak)
+        self.ChangePeriodGroup.setExclusive(True)
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.ChangePeriod.menuAction())
         self.menubar.insertAction(self.Pause_Unpause, self.Pause_Unpause)
@@ -107,6 +116,7 @@ class Ui_MainWindow(object):
         self.removeButton.setText(_translate("MainWindow", "Remove tasks"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.ChangePeriod.setTitle(_translate("MainWindow", "Change period"))
+        self.ChangeToFocusTime.setChecked(True)
         self.Pause_Unpause.setText(_translate("MainWindow", "Pause/Continue"))
         self.setTimeSchedule.setText(_translate("MainWindow", "Time Schedule"))
         self.ChangeToFocusTime.setText(_translate("MainWindow", "Focus Time"))

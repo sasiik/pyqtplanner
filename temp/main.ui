@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>634</width>
+    <height>782</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Yandex.Planner</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>20</y>
+      <width>451</width>
+      <height>691</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="timer">
+       <property name="font">
+        <font>
+         <pointsize>70</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>12:34</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="periodInfo">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Focus Time</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="changeStateButton">
+       <property name="text">
+        <string>Mark selected tasks as completed/uncompleted</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tasksTable"/>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="mainAddTaskButton">
+         <property name="text">
+          <string>Add task</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeButton">
+         <property name="text">
+          <string>Remove tasks</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>634</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="setTimeSchedule"/>
+    <addaction name="ClearData"/>
+   </widget>
+   <widget class="QMenu" name="ChangePeriod">
+    <property name="title">
+     <string>Change period</string>
+    </property>
+    <addaction name="ChangeToFocusTime"/>
+    <addaction name="ChangeToShortBreak"/>
+    <addaction name="ChangeToLongBreak"/>
+   </widget>
+   <widget class="QMenu" name="menuPause_Unpause">
+    <property name="title">
+     <string>Pause/Continue</string>
+    </property>
+   </widget>
+   <addaction name="menuSettings"/>
+   <addaction name="ChangePeriod"/>
+   <addaction name="menuPause_Unpause"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="setTimeSchedule">
+   <property name="text">
+    <string>Time Schedule</string>
+   </property>
+  </action>
+  <action name="ChangeToFocusTime">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Focus Time</string>
+   </property>
+  </action>
+  <action name="ChangeToShortBreak">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Short Break</string>
+   </property>
+  </action>
+  <action name="ChangeToLongBreak">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Long Break</string>
+   </property>
+  </action>
+  <action name="ClearData">
+   <property name="text">
+    <string>Clear data</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

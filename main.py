@@ -1,9 +1,10 @@
 import os
 import sys
 
-from PyQt5.QtCore import QTimer, QUrl
+from PyQt5.QtCore import QTimer, QUrl, QPoint
 from PyQt5 import QtMultimedia
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView, \
+    QAction
 from sqlite3_connection import con
 
 from UI_Main import Ui_MainWindow
@@ -22,7 +23,8 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.tasksTable.horizontalHeader().setStretchLastSection(True)
         self.tasksTable.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.tasksTable.setWordWrap(True)
-        self.tasksTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # self.tasksTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tasksTable.itemChanged.connect(self.tableEdit)
         self.initTable()
         self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
 
@@ -45,9 +47,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.qttimer.start(1000)
 
         # Initializing time periods data (time in sec, name of period, color properties for period)
-        self.focus_time = {'in_sec': 1500, 'label': 'Focus Time', 'properties': 'QLabel { color : red; }'}
-        self.break_time = {'in_sec': 300, 'label': 'Break Time', 'properties': 'QLabel { color : green; }'}
-        self.long_break_time = {'in_sec': 900, 'label': 'Long Break Time', 'properties': 'QLabel { color : blue; }'}
+        self.focus_time = {'in_sec': 1500, 'label': 'Focus Time', 'properties': 'QLabel { color : red; }', 'qaction': 0}
+        self.break_time = {'in_sec': 300, 'label': 'Break Time', 'properties': 'QLabel { color : green; }',
+                           'qaction': 1}
+        self.long_break_time = {'in_sec': 900, 'label': 'Long Break Time', 'properties': 'QLabel { color : blue; }',
+                                'qaction': 2}
 
         # Reading config.csv file and modifying periods values accordingly
         self.personalDataReader()
@@ -107,6 +111,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         SET completed = CASE completed WHEN 'FALSE' THEN 'TRUE' ELSE 'FALSE' END
         WHERE id IN (""" + """, """.join(
             '?' * len(ids)) + """)""", ids)
+        con.commit()
         self.initTable()
 
     def addTask(self):
@@ -128,6 +133,38 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 con.commit()
                 self.initTable()
 
+    # Allows user to edit the table by clicking on the cells
+    def tableEdit(self):
+        if self.tasksTable.state() == QAbstractItemView.EditingState:
+            if self.tasksTable.selectedItems():
+                selected_item = self.tasksTable.selectedItems()[0]
+                row = self.tasksTable.selectedItems()[0].row()
+                id = self.tasksTable.item(row, 3).text()
+                if selected_item.column() == 0:
+                    cur = con.cursor()
+                    title = self.tasksTable.item(row, 0).text()
+                    cur.execute("""UPDATE tasks
+                            SET title = ?
+                            WHERE id = ?""", (title, id))
+                    con.commit()
+                    self.tasksTable.setState(QAbstractItemView.NoState)
+                    self.initTable()
+                    return
+                if selected_item.column() == 1:
+                    circ_count = self.tasksTable.item(row, 1).text()
+                    if circ_count.isdigit():
+                        if int(circ_count) > 0:
+                            cur = con.cursor()
+                            cur.execute("""UPDATE tasks
+                                                    SET circ_count = ?
+                                                    WHERE id = ?""", (circ_count, id))
+                            con.commit()
+                            self.tasksTable.setState(QAbstractItemView.NoState)
+                            self.initTable()
+                            return
+                self.tasksTable.setState(QAbstractItemView.NoState)
+                self.initTable()
+
     # Calls SettingsApp
     def popupTimeScheduleWindow(self):
         from settingswindow.settings import SettingsApp
@@ -142,6 +179,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.periodInfo.setText(self.current_period['label'])
         self.timer.setStyleSheet(self.current_period['properties'])
         self.periodInfo.setStyleSheet(self.current_period['properties'])
+        self.ChangePeriod.actions()[self.current_period['qaction']].setChecked(True)
 
     # Changing periods function
     def ChangePeriodFunction(self):
@@ -173,7 +211,16 @@ class MainApp(QMainWindow, Ui_MainWindow):
             QMessageBox.Yes, QMessageBox.No)
         if valid == QMessageBox.Yes:
             cur = con.cursor()
-            cur.execute("DELETE FROM tasks")
+            cur.execute("DROP TABLE tasks")
+            cur.execute("""CREATE TABLE tasks (
+                            title      STRING  NOT NULL,
+                            circ_count INTEGER NOT NULL,
+                            completed  BOOLEAN NOT NULL,
+                            id         INTEGER PRIMARY KEY AUTOINCREMENT
+                                               UNIQUE
+                                               NOT NULL
+            )
+            """)
             con.commit()
             self.initTable()
 
