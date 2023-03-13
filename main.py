@@ -9,6 +9,7 @@ from sqlite3_connection import con
 from UI_Main import Ui_MainWindow
 import datetime as dt
 import csv
+from resourcepath import resource_path
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
@@ -28,7 +29,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.tasksTable.setHorizontalHeaderLabels(['Task Name', 'Est. Laps', 'Is Done'])
 
         # Loading sound
-        self.load_mp3(os.getcwd() + '/alarm.wav')
+        self.load_mp3(resource_path('alarm.wav'))
 
         # Connecting buttons
         self.changeStateButton.clicked.connect(self.changeState)
@@ -69,7 +70,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     # Config.csv file reader
     def personalDataReader(self):
-        with open('config.csv', encoding="utf8") as csvfile:
+        with open(resource_path('config.csv'), encoding="utf8") as csvfile:
             reader = list(csv.reader(csvfile, delimiter=';'))
             self.focus_time['in_sec'] = int(reader[0][0])
             self.break_time['in_sec'] = int(reader[0][1])
