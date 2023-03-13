@@ -4,7 +4,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QApplication
 
 from settingswindow.UI_Settings import Ui_Form
-from resourcepath import resource_path
+from resourcepath import resource_path, get_config_path
 
 
 class SettingsApp(QWidget, Ui_Form):
@@ -18,7 +18,7 @@ class SettingsApp(QWidget, Ui_Form):
 
     # Fuction to write data to user config
     def personalDataWriter(self, *values_list):
-        with open(resource_path('config.csv'), 'w', encoding="utf8") as csvfile:
+        with open(get_config_path('config.csv'), 'w', encoding="utf8") as csvfile:
             writer = csv.writer(
                 csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(values_list)

@@ -9,7 +9,7 @@ from sqlite3_connection import con
 from UI_Main import Ui_MainWindow
 import datetime as dt
 import csv
-from resourcepath import resource_path
+from resourcepath import resource_path, get_config_path
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
@@ -70,7 +70,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     # Config.csv file reader
     def personalDataReader(self):
-        with open(resource_path('config.csv'), encoding="utf8") as csvfile:
+        with open(get_config_path('config.csv'), encoding="utf8") as csvfile:
             reader = list(csv.reader(csvfile, delimiter=';'))
             self.focus_time['in_sec'] = int(reader[0][0])
             self.break_time['in_sec'] = int(reader[0][1])

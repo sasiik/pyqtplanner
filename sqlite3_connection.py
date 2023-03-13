@@ -1,4 +1,4 @@
 import sqlite3
-from resourcepath import resource_path
+from resourcepath import get_config_path
 
-con = sqlite3.connect(resource_path("tasks.sqlite"))
+con = sqlite3.connect(get_config_path("tasks.sqlite"))
