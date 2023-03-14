@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QApplication
 
 from addtaskwindow.UI_AddTask import Ui_Form
-from sqlite3_connection import con
+from initfiles import con
 
 
 class AddTaskApp(QWidget, Ui_Form):

@@ -4,12 +4,12 @@ import sys
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5 import QtMultimedia
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QHeaderView, QAbstractItemView
-from sqlite3_connection import con
+from initfiles import con, config_path
 
 from UI_Main import Ui_MainWindow
 import datetime as dt
 import csv
-from resourcepath import resource_path, get_config_path
+from resourcepath import resource_path
 
 
 class MainApp(QMainWindow, Ui_MainWindow):
@@ -70,7 +70,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     # Config.csv file reader
     def personalDataReader(self):
-        with open(get_config_path('config.csv'), encoding="utf8") as csvfile:
+        with open(config_path, encoding="utf8") as csvfile:
             reader = list(csv.reader(csvfile, delimiter=';'))
             self.focus_time['in_sec'] = int(reader[0][0])
             self.break_time['in_sec'] = int(reader[0][1])

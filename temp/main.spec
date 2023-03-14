@@ -8,7 +8,7 @@ a = Analysis(
     ['main.py'],
     pathex=['/home/stas/MyProjects/pyqtplanner'],
     binaries=[],
-    datas=[('tasks.sqlite', '.'), ('alarm.wav', '.'), ('config.csv', '.')],
+    datas=[('alarm.wav', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
